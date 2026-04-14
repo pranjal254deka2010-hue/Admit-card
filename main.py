@@ -57,7 +57,7 @@ if submit and student_name:
     pdf.set_font("Arial", 'B', 13); pdf.set_fill_color(240, 240, 240); pdf.set_text_color(0,0,0)
     pdf.cell(0, 10, "ADMIT CARD: DMLT FINAL EXAMINATION 2026", border=1, ln=True, align='C', fill=True)
     
-    # 4. PHOTO
+    # 4. PHOTO BOX
     if uploaded_photo:
         pdf.image(temp_photo, 160, 65, 35, 45)
     else:
@@ -72,7 +72,7 @@ if submit and student_name:
     pdf.cell(0, 10, f"COURSE         : DMLT (Medical Laboratory Tech)", ln=True)
     pdf.cell(0, 10, f"EXAM CENTER    : {exam_center.upper()}", ln=True)
     
-    # 6. DMLT EXAM SCHEDULE
+    # 6. DMLT EXAM SCHEDULE (UPDATED TIMING)
     pdf.ln(12)
     pdf.set_font("Arial", 'B', 10); pdf.set_fill_color(220, 220, 220)
     pdf.cell(40, 10, "DATE / DAY", border=1, fill=True, align='C')
@@ -80,12 +80,12 @@ if submit and student_name:
     pdf.cell(55, 10, "TIMING", border=1, fill=True, align='C', ln=True)
     
     pdf.set_font("Arial", '', 10)
-    # Your specific DMLT schedule
+    new_time = "10:30 AM - 01:30 PM"
     schedule = [
-        ["11/05/2026 Mon", "English & Computer", "10:30 AM - 02:00 PM"],
-        ["13/05/2026 Wed", "Hematology", "10:30 AM - 02:00 PM"],
-        ["16/05/2026 Sat", "Microbiology", "10:30 AM - 02:00 PM"],
-        ["18/05/2026 Mon", "Anatomy, Physiology & Biochemistry", "10:30 AM - 02:00 PM"],
+        ["11/05/2026 Mon", "English & Computer", new_time],
+        ["13/05/2026 Wed", "Hematology", new_time],
+        ["16/05/2026 Sat", "Microbiology", new_time],
+        ["18/05/2026 Mon", "Anatomy, Physiology & Biochemistry", new_time],
         ["21/05/2026 Thu", "Practical Exam & Viva", "10:30 AM Onwards"]
     ]
     for item in schedule:
@@ -102,7 +102,7 @@ if submit and student_name:
     pdf.set_xy(15, 240); pdf.cell(50, 10, "Candidate Signature", align='C')
 
     pdf_output = pdf.output(dest='S').encode('latin-1')
-    st.success(f"✅ DMLT Admit Card for {student_name} generated!")
+    st.success(f"✅ DMLT Admit Card for {student_name} generated with updated timings!")
     st.download_button("Download Admit Card", pdf_output, f"DMLT_Admit_{student_name}.pdf")
     
     if os.path.exists(temp_photo): os.remove(temp_photo)
