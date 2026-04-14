@@ -37,7 +37,7 @@ if submit and student_name:
     pdf = FPDF()
     pdf.add_page()
     
-    # 1. PROFESSIONAL BORDERS
+    # 1. BORDERS
     pdf.set_line_width(0.8); pdf.rect(5, 5, 200, 287) 
     pdf.set_line_width(0.2); pdf.rect(6.5, 6.5, 197, 284) 
     
@@ -64,22 +64,25 @@ if submit and student_name:
         pdf.rect(160, 65, 35, 45)
         pdf.set_xy(160, 111); pdf.set_font("Arial", '', 7); pdf.cell(35, 5, "Affix Photo", align='C')
     
-    # 5. CANDIDATE INFO
-    pdf.set_xy(15, 70); pdf.set_font("Arial", 'B', 11)
-    pdf.cell(0, 10, f"ROLL NUMBER    : {roll_no.upper()}", ln=True)
-    pdf.cell(0, 10, f"NAME           : {student_name.upper()}", ln=True)
-    pdf.cell(0, 10, f"FATHER'S NAME : {father_name.upper()}", ln=True)
-    pdf.cell(0, 10, f"COURSE         : DMLT (Medical Laboratory Tech)", ln=True)
-    pdf.cell(0, 10, f"EXAM CENTER    : {exam_center.upper()}", ln=True)
+    # 5. CANDIDATE INFO & ENTRY TIME
+    pdf.set_xy(15, 70); pdf.set_font("Arial", 'B', 10)
+    pdf.cell(0, 8, f"ROLL NUMBER    : {roll_no.upper()}", ln=True)
+    pdf.cell(0, 8, f"NAME           : {student_name.upper()}", ln=True)
+    pdf.cell(0, 8, f"FATHER'S NAME : {father_name.upper()}", ln=True)
+    pdf.cell(0, 8, f"COURSE         : DMLT (Medical Laboratory Tech)", ln=True)
+    pdf.cell(0, 8, f"EXAM CENTER    : {exam_center.upper()}", ln=True)
+    pdf.set_text_color(204, 0, 0) # Red for Entry Time
+    pdf.cell(0, 8, f"REPORTING TIME : 10:00 AM (Entry Closes at 10:15 AM)", ln=True)
+    pdf.set_text_color(0, 0, 0)
+
+    # 6. DMLT EXAM SCHEDULE
+    pdf.ln(10)
+    pdf.set_font("Arial", 'B', 9); pdf.set_fill_color(220, 220, 220)
+    pdf.cell(35, 10, "DATE / DAY", border=1, fill=True, align='C')
+    pdf.cell(105, 10, "SUBJECTS", border=1, fill=True, align='C')
+    pdf.cell(50, 10, "TIMING", border=1, fill=True, align='C', ln=True)
     
-    # 6. DMLT EXAM SCHEDULE (UPDATED TIMING)
-    pdf.ln(12)
-    pdf.set_font("Arial", 'B', 10); pdf.set_fill_color(220, 220, 220)
-    pdf.cell(40, 10, "DATE / DAY", border=1, fill=True, align='C')
-    pdf.cell(95, 10, "SUBJECTS", border=1, fill=True, align='C')
-    pdf.cell(55, 10, "TIMING", border=1, fill=True, align='C', ln=True)
-    
-    pdf.set_font("Arial", '', 10)
+    pdf.set_font("Arial", '', 9)
     new_time = "10:30 AM - 01:30 PM"
     schedule = [
         ["11/05/2026 Mon", "English & Computer", new_time],
@@ -89,20 +92,36 @@ if submit and student_name:
         ["21/05/2026 Thu", "Practical Exam & Viva", "10:30 AM Onwards"]
     ]
     for item in schedule:
-        pdf.cell(40, 10, item[0], border=1, align='C')
-        pdf.cell(95, 10, f"  {item[1]}", border=1)
-        pdf.cell(55, 10, item[2], border=1, ln=True, align='C')
+        pdf.cell(35, 10, item[0], border=1, align='C')
+        pdf.cell(105, 10, f"  {item[1]}", border=1)
+        pdf.cell(50, 10, item[2], border=1, ln=True, align='C')
     
-    # 7. FOOTER & SIGNATURES
-    pdf.ln(15)
-    if os.path.exists("signature.png"): pdf.image("signature.png", 150, 215, 35)
-    pdf.set_xy(140, 235); pdf.set_font("Arial", 'B', 10); pdf.cell(50, 10, "__________________________", ln=True, align='C')
-    pdf.set_xy(140, 240); pdf.cell(50, 10, "Controller of Examinations", align='C')
+    # 7. INSTRUCTIONS SECTION
+    pdf.ln(5)
+    pdf.set_font("Arial", 'B', 10); pdf.set_text_color(0, 46, 99)
+    pdf.cell(0, 7, "GENERAL INSTRUCTIONS TO CANDIDATES:", ln=True)
+    pdf.set_font("Arial", '', 8.5); pdf.set_text_color(0, 0, 0)
+    instructions = [
+        "1. Candidates must carry this Admit Card and an Identity Proof to the examination hall.",
+        "2. Entry to the examination hall starts at 10:00 AM. No entry allowed after 10:15 AM.",
+        "3. Use of mobile phones, calculators, or any electronic gadgets is strictly prohibited.",
+        "4. Candidates must bring their own stationery (Pen, Pencil, Eraser) and a clean Lab Coat.",
+        "5. Any candidate found using unfair means will be disqualified immediately.",
+        "6. Maintain silence and follow the instructions provided by the invigilator."
+    ]
+    for line in instructions:
+        pdf.cell(0, 5, line, ln=True)
+
+    # 8. FOOTER & SIGNATURES
+    pdf.ln(10)
+    if os.path.exists("signature.png"): pdf.image("signature.png", 150, 235, 35)
+    pdf.set_xy(140, 255); pdf.set_font("Arial", 'B', 9); pdf.cell(50, 10, "__________________________", ln=True, align='C')
+    pdf.set_xy(140, 260); pdf.cell(50, 10, "Controller of Examinations", align='C')
     
-    pdf.set_xy(15, 240); pdf.cell(50, 10, "Candidate Signature", align='C')
+    pdf.set_xy(15, 260); pdf.cell(50, 10, "Candidate Signature", align='C')
 
     pdf_output = pdf.output(dest='S').encode('latin-1')
-    st.success(f"✅ DMLT Admit Card for {student_name} generated with updated timings!")
+    st.success(f"✅ Admit Card for {student_name} generated with Instructions!")
     st.download_button("Download Admit Card", pdf_output, f"DMLT_Admit_{student_name}.pdf")
     
     if os.path.exists(temp_photo): os.remove(temp_photo)
