@@ -3,72 +3,56 @@ from fpdf import FPDF
 from datetime import datetime
 import os
 
-# --- SIMPLE CONFIG ---
-st.set_page_config(page_title="OPI Admit Card Portal")
+# --- SIMPLEST CONFIG ---
+st.set_page_config(page_title="OPI Receipt")
 
-st.markdown("<h2 style='text-align: center;'>OXFORD PARAMEDICAL INSTITUTE</h2>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;'>Dhupdhara Campus | Admit Card Portal</p>", unsafe_allow_html=True)
+st.title("OXFORD PARAMEDICAL INSTITUTE")
+st.write("Dhupdhara Campus")
 
 # --- FORM ---
-with st.form("admit_form"):
+with st.form("receipt"):
     name = st.text_input("Student Name")
-    roll = st.text_input("Roll Number")
-    course = st.selectbox("Course", ["DMLT (First Year)", "ICU TECHNICIAN", "FIRST AID AND PATIENT CARE"])
-    photo = st.file_uploader("Upload Photo", type=['jpg', 'png'])
-    submit = st.form_submit_button("Generate Admit Card")
+    amt = st.number_input("Amount (₹)", min_value=0)
+    submit = st.form_submit_button("Generate PDF")
 
-if submit and name and roll:
+if submit and name:
     # Build PDF
     pdf = FPDF()
     pdf.add_page()
     
-    # 1. Simple Border
+    # 1. BORDER
     pdf.rect(5, 5, 200, 287)
     
-    # 2. Header
+    # 2. LOGO (Top Left)
+    if os.path.exists("logo.png"):
+        pdf.image("logo.png", 10, 10, 30)
+    
+    # 3. HEADER
     pdf.set_font("Arial", 'B', 16)
-    pdf.cell(0, 10, "OXFORD PARAMEDICAL INSTITUTE", ln=True, align='C')
-    pdf.set_font("Arial", '', 10)
-    pdf.cell(0, 5, "Dhupdhara, Assam | Examination Admit Card", ln=True, align='C')
-    pdf.ln(10)
-
-    # 3. Student Photo
-    if photo:
-        with open("temp.png", "wb") as f:
-            f.write(photo.getbuffer())
-        pdf.image("temp.png", 160, 40, 35, 40)
-    else:
-        pdf.rect(160, 40, 35, 40)
-
-    # 4. Details
-    pdf.set_font("Arial", 'B', 12)
-    pdf.cell(0, 10, f"NAME: {name.upper()}", ln=True)
-    pdf.cell(0, 10, f"ROLL NO: {roll}", ln=True)
-    pdf.cell(0, 10, f"COURSE: {course}", ln=True)
-    pdf.ln(10)
-
-    # 5. Routine (DMLT)
-    pdf.set_font("Arial", 'B', 11)
-    pdf.cell(0, 10, "EXAMINATION ROUTINE:", ln=True)
-    pdf.set_font("Arial", '', 10)
+    pdf.set_xy(45, 15)
+    pdf.cell(0, 10, "OXFORD PARAMEDICAL INSTITUTE", ln=True)
     
-    routine = [
-        ["11/05/2026", "English Computer", "10AM-1PM"],
-        ["13/05/2026", "Hematology", "10AM-1PM"],
-        ["16/05/2026", "Microbiology", "10AM-1PM"],
-        ["18/05/2026", "Anatomy-Biochemistry", "10AM-1PM"],
-        ["21/05/2026", "Practical & Viva", "10AM-4PM"]
-    ]
+    pdf.set_font("Arial", '', 10)
+    pdf.set_xy(45, 22)
+    pdf.cell(0, 10, "Dhupdhara, Goalpara, Assam", ln=True)
     
-    for r in routine:
-        pdf.cell(0, 8, f"{r[0]} --- {r[1]} ({r[2]})", ln=True)
-
-    # 6. Signature
     pdf.ln(30)
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "FEES RECEIPT", ln=True, align='C')
+    
+    # 4. CONTENT
+    pdf.ln(10)
+    pdf.set_font("Arial", '', 12)
+    pdf.cell(0, 10, f"Date: {datetime.now().strftime('%d-%m-%Y')}", ln=True, align='R')
+    pdf.cell(0, 10, f"Student: {name.upper()}", border='B', ln=True)
+    pdf.cell(0, 10, f"Amount: Rs. {amt}", border='B', ln=True)
+    
+    # 5. SIGNATURE LINE
+    pdf.ln(40)
     pdf.cell(0, 10, "__________________________", ln=True, align='R')
     pdf.cell(0, 5, "Authorized Signatory      ", ln=True, align='R')
 
-    # DOWNLOAD
-    pdf_output = pdf.output(dest='S').encode('latin-1')
-    st.success("Success! Your Admit Card is ready.")
-    st.download_button("Download Admit Card", pdf_output, f"Admit_{roll}.pdf")
+    # Output
+    pdf_out = pdf.output(dest='S').encode('latin-1')
+    st.success("Ready!")
+    st.download_button("Download Receipt", pdf_out, "receipt.pdf")
