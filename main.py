@@ -8,7 +8,8 @@ from PIL import Image
 st.set_page_config(page_title="OPI DMLT Portal", layout="centered")
 
 st.markdown("<h1 style='text-align: center; color: #002e63;'>OXFORD PARAMEDICAL INSTITUTE</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-weight: bold; margin-top:-15px;'>Dhupdhara, Goalpara, Assam - 783123</p>", unsafe_allow_html=True)
+# UPDATED ADDRESS: Chamata Balipathar Road
+st.markdown("<p style='text-align: center; font-weight: bold; margin-top:-15px;'>Chamata Balipathar Road, Assam</p>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: green; font-weight: bold;'>Affiliated to BSS (Bharat Sevak Samaj) | Promoted by Govt. of India</p>", unsafe_allow_html=True)
 
 st.divider()
@@ -49,7 +50,8 @@ if submit and student_name:
     pdf.set_font("Arial", 'B', 16); pdf.set_text_color(0, 46, 99)
     pdf.set_xy(10, 15); pdf.cell(0, 10, "OXFORD PARAMEDICAL INSTITUTE", ln=True, align='C')
     pdf.set_font("Arial", 'B', 9); pdf.set_text_color(204, 0, 0)
-    pdf.cell(0, 5, "Dhupdhara, Goalpara, Assam - 783123", ln=True, align='C')
+    # UPDATED ADDRESS IN PDF
+    pdf.cell(0, 5, "Chamata Balipathar Road, Assam", ln=True, align='C')
     pdf.set_font("Arial", 'B', 10); pdf.set_text_color(0, 100, 0)
     pdf.cell(0, 7, "AFFILIATED TO BHARAT SEVAK SAMAJ (BSS)", ln=True, align='C')
     
@@ -64,37 +66,42 @@ if submit and student_name:
         pdf.rect(160, 65, 35, 45)
         pdf.set_xy(160, 111); pdf.set_font("Arial", '', 7); pdf.cell(35, 5, "Affix Photo", align='C')
     
-    # 5. CANDIDATE INFO & ENTRY TIME
+    # 5. CANDIDATE INFO
     pdf.set_xy(15, 70); pdf.set_font("Arial", 'B', 10)
-    pdf.cell(0, 8, f"ROLL NUMBER    : {roll_no.upper()}", ln=True)
-    pdf.cell(0, 8, f"NAME           : {student_name.upper()}", ln=True)
-    pdf.cell(0, 8, f"FATHER'S NAME : {father_name.upper()}", ln=True)
-    pdf.cell(0, 8, f"COURSE         : DMLT (Medical Laboratory Tech)", ln=True)
-    pdf.cell(0, 8, f"EXAM CENTER    : {exam_center.upper()}", ln=True)
-    pdf.set_text_color(204, 0, 0) # Red for Entry Time
-    pdf.cell(0, 8, f"REPORTING TIME : 10:00 AM (Entry Closes at 10:15 AM)", ln=True)
+    pdf.cell(0, 8, f"ROLL NUMBER     : {roll_no.upper()}", ln=True)
+    pdf.cell(0, 8, f"NAME            : {student_name.upper()}", ln=True)
+    pdf.cell(0, 8, f"FATHER'S NAME  : {father_name.upper()}", ln=True)
+    pdf.cell(0, 8, f"COURSE          : DMLT (Medical Laboratory Tech)", ln=True)
+    pdf.cell(0, 8, f"EXAM CENTER     : {exam_center.upper()}", ln=True)
+    pdf.set_text_color(204, 0, 0) 
+    pdf.cell(0, 8, f"REPORTING TIME  : 10:00 AM (Entry Closes at 10:15 AM)", ln=True)
     pdf.set_text_color(0, 0, 0)
 
-    # 6. DMLT EXAM SCHEDULE
+    # 6. UPDATED DMLT EXAM SCHEDULE
     pdf.ln(10)
     pdf.set_font("Arial", 'B', 9); pdf.set_fill_color(220, 220, 220)
-    pdf.cell(35, 10, "DATE / DAY", border=1, fill=True, align='C')
-    pdf.cell(105, 10, "SUBJECTS", border=1, fill=True, align='C')
+    pdf.cell(30, 10, "DATE", border=1, fill=True, align='C')
+    pdf.cell(110, 10, "SUBJECTS", border=1, fill=True, align='C')
     pdf.cell(50, 10, "TIMING", border=1, fill=True, align='C', ln=True)
     
-    pdf.set_font("Arial", '', 9)
+    pdf.set_font("Arial", '', 8.5)
     new_time = "10:30 AM - 01:30 PM"
+    # INTEGRATED YOUR SPECIFIC ROUTINE
     schedule = [
-        ["11/05/2026 Mon", "English & Computer", new_time],
-        ["13/05/2026 Wed", "Hematology", new_time],
-        ["16/05/2026 Sat", "Microbiology", new_time],
-        ["18/05/2026 Mon", "Anatomy, Physiology & Biochemistry", new_time],
-        ["21/05/2026 Thu", "Practical Exam & Viva", "10:30 AM Onwards"]
+        ["14/05/2026", "English and Computer", new_time],
+        ["16/05/2026", "Anatomy and Physiology", new_time],
+        ["19/05/2026", "Biochemistry", new_time],
+        ["21/05/2026", "Microbiology", new_time],
+        ["23/05/2026", "Pathology", new_time],
+        ["26/05/2026", "Biochemistry (Project viva and submission)", "10:30 AM Onwards"],
+        ["28/05/2026", "Microbiology (Practical viva and submission)", "10:30 AM Onwards"],
+        ["29/05/2026", "Pathology (Practical viva and submission)", "10:30 AM Onwards"]
     ]
+    
     for item in schedule:
-        pdf.cell(35, 10, item[0], border=1, align='C')
-        pdf.cell(105, 10, f"  {item[1]}", border=1)
-        pdf.cell(50, 10, item[2], border=1, ln=True, align='C')
+        pdf.cell(30, 9, item[0], border=1, align='C')
+        pdf.cell(110, 9, f"  {item[1]}", border=1)
+        pdf.cell(50, 9, item[2], border=1, ln=True, align='C')
     
     # 7. INSTRUCTIONS SECTION
     pdf.ln(5)
@@ -105,7 +112,7 @@ if submit and student_name:
         "1. Candidates must carry this Admit Card and an Identity Proof to the examination hall.",
         "2. Entry to the examination hall starts at 10:00 AM. No entry allowed after 10:15 AM.",
         "3. Use of mobile phones, calculators, or any electronic gadgets is strictly prohibited.",
-        "4. Candidates must bring their own stationery (Pen, Pencil, Eraser) and a clean Lab Coat.",
+        "4. Candidates must bring their own stationery and a clean Lab Coat.",
         "5. Any candidate found using unfair means will be disqualified immediately.",
         "6. Maintain silence and follow the instructions provided by the invigilator."
     ]
@@ -114,14 +121,14 @@ if submit and student_name:
 
     # 8. FOOTER & SIGNATURES
     pdf.ln(10)
-    if os.path.exists("signature.png"): pdf.image("signature.png", 150, 235, 35)
-    pdf.set_xy(140, 255); pdf.set_font("Arial", 'B', 9); pdf.cell(50, 10, "__________________________", ln=True, align='C')
-    pdf.set_xy(140, 260); pdf.cell(50, 10, "Controller of Examinations", align='C')
+    if os.path.exists("signature.png"): pdf.image("signature.png", 150, 245, 35)
+    pdf.set_xy(140, 265); pdf.set_font("Arial", 'B', 9); pdf.cell(50, 10, "__________________________", ln=True, align='C')
+    pdf.set_xy(140, 270); pdf.cell(50, 10, "Controller of Examinations", align='C')
     
-    pdf.set_xy(15, 260); pdf.cell(50, 10, "Candidate Signature", align='C')
+    pdf.set_xy(15, 270); pdf.cell(50, 10, "Candidate Signature", align='C')
 
-    pdf_output = pdf.output(dest='S').encode('latin-1')
-    st.success(f"✅ Admit Card for {student_name} generated with Instructions!")
+    pdf_output = pdf.output(dest='S').encode('latin-1', 'ignore')
+    st.success(f"✅ Admit Card for {student_name} generated successfully!")
     st.download_button("Download Admit Card", pdf_output, f"DMLT_Admit_{student_name}.pdf")
     
     if os.path.exists(temp_photo): os.remove(temp_photo)
