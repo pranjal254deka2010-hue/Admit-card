@@ -40,7 +40,7 @@ if submit and student_name:
     # 1. BORDERS
     pdf.set_line_width(0.5); pdf.rect(5, 5, 200, 287) 
     
-    # 2. HEADER (Tightened for more space)
+    # 2. HEADER
     if os.path.exists("logo.png"): pdf.image("logo.png", 8, 7, 20)
     if os.path.exists("bss_logo.png"): pdf.image("bss_logo.png", 178, 7, 18)
     
@@ -70,15 +70,13 @@ if submit and student_name:
     pdf.cell(0, 6, f"REPORTING TIME  : 10:00 AM (Entry Closes 10:15 AM)", ln=True)
     pdf.set_text_color(0, 0, 0)
 
-    # Photo Box
     if uploaded_photo:
         pdf.image(temp_photo, 160, start_y, 32, 38)
     else:
         pdf.rect(160, start_y, 32, 38)
         pdf.set_xy(160, start_y + 39); pdf.set_font("Arial", '', 7); pdf.cell(32, 4, "Affix Photo", align='C')
     
-    # 4. EXAM SCHEDULE TABLE (Enlarged by approx 1 inch / 25mm total)
-    # Row height increased to 10mm (Original was 7mm)
+    # 4. EXAM SCHEDULE TABLE (Enlarged Routine)
     pdf.set_xy(10, start_y + 40)
     pdf.set_font("Arial", 'B', 10); pdf.set_fill_color(220, 220, 220)
     pdf.cell(30, 10, "DATE", border=1, fill=True, align='C')
@@ -103,8 +101,8 @@ if submit and student_name:
         pdf.cell(110, 10, f" {item[1]}", border=1)
         pdf.cell(50, 10, item[2], border=1, ln=True, align='C')
     
-    # 5. INSTRUCTIONS (Tighter padding)
-    pdf.ln(3)
+    # 5. INSTRUCTIONS (Tighter)
+    pdf.ln(2)
     pdf.set_font("Arial", 'B', 9); pdf.set_text_color(0, 46, 99)
     pdf.cell(0, 5, "GENERAL INSTRUCTIONS TO CANDIDATES:", ln=True)
     pdf.set_font("Arial", '', 8); pdf.set_text_color(0, 0, 0)
@@ -118,19 +116,22 @@ if submit and student_name:
     for line in instructions:
         pdf.cell(0, 4, line, ln=True)
 
-    # 6. SIGNATURES
-    pdf.set_y(260) 
+    # 6. SIGNATURE SECTION (Moved up significantly)
+    # Reclaiming space by setting Y closer to instructions
+    current_y = pdf.get_y() + 10 
+    pdf.set_y(current_y)
+    
     if os.path.exists("signature.png"):
-        pdf.image("signature.png", 155, 252, 30)
+        pdf.image("signature.png", 155, current_y - 8, 30)
     
     pdf.set_font("Arial", 'B', 9)
-    pdf.set_xy(15, 270); pdf.cell(50, 5, "______________________", ln=False, align='C')
-    pdf.set_xy(140, 270); pdf.cell(50, 5, "______________________", ln=True, align='C')
-    pdf.set_xy(15, 275); pdf.cell(50, 5, "Candidate Signature", align='C')
-    pdf.set_xy(140, 275); pdf.cell(50, 5, "Controller of Examinations", align='C')
+    pdf.set_xy(15, current_y + 10); pdf.cell(50, 5, "______________________", ln=False, align='C')
+    pdf.set_xy(140, current_y + 10); pdf.cell(50, 5, "______________________", ln=True, align='C')
+    pdf.set_xy(15, current_y + 15); pdf.cell(50, 5, "Candidate Signature", align='C')
+    pdf.set_xy(140, current_y + 15); pdf.cell(50, 5, "Seal & Signature", align='C')
 
     pdf_output = pdf.output(dest='S').encode('latin-1', 'ignore')
-    st.success(f"✅ Admit Card with enlarged routine ready!")
+    st.success(f"✅ Admit Card for {student_name} generated!")
     st.download_button("Download Admit Card", pdf_output, f"DMLT_Admit_{student_name}.pdf")
     
     if os.path.exists(temp_photo): os.remove(temp_photo)
