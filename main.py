@@ -8,14 +8,13 @@ from PIL import Image
 st.set_page_config(page_title="OPI DMLT Portal", layout="centered")
 
 st.markdown("<h1 style='text-align: center; color: #002e63;'>OXFORD PARAMEDICAL INSTITUTE</h1>", unsafe_allow_html=True)
-# UPDATED ADDRESS: Chamata Balipathar Road
 st.markdown("<p style='text-align: center; font-weight: bold; margin-top:-15px;'>Chamata Balipathar Road, Assam</p>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: green; font-weight: bold;'>Affiliated to BSS (Bharat Sevak Samaj) | Promoted by Govt. of India</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; color: green; font-weight: bold;'>Affiliated to BSS (Bharat Sevak Samaj)</p>", unsafe_allow_html=True)
 
 st.divider()
 
 # --- INPUT FORM ---
-st.subheader("📝 DMLT Final Examination 2026 - Admit Card")
+st.subheader("📝 DMLT Final Examination 2026")
 with st.form("dmlt_admit_form"):
     col1, col2 = st.columns(2)
     with col1:
@@ -23,11 +22,11 @@ with st.form("dmlt_admit_form"):
         student_name = st.text_input("CANDIDATE NAME")
         father_name = st.text_input("FATHER'S NAME")
     with col2:
-        st.write("**Course:** Diploma in Medical Laboratory Technology (DMLT)")
+        st.write("**Course:** DMLT")
         exam_center = st.text_input("EXAM CENTER", value="Dhupdhara Campus")
-        uploaded_photo = st.file_uploader("Upload Student Photo (JPG/PNG)", type=['jpg', 'jpeg', 'png'])
+        uploaded_photo = st.file_uploader("Upload Photo", type=['jpg', 'jpeg', 'png'])
     
-    submit = st.form_submit_button("GENERATE DMLT ADMIT CARD")
+    submit = st.form_submit_button("GENERATE ADMIT CARD")
 
 if submit and student_name:
     temp_photo = "temp_photo.png"
@@ -39,54 +38,54 @@ if submit and student_name:
     pdf.add_page()
     
     # 1. BORDERS
-    pdf.set_line_width(0.8); pdf.rect(5, 5, 200, 287) 
-    pdf.set_line_width(0.2); pdf.rect(6.5, 6.5, 197, 284) 
+    pdf.set_line_width(0.5); pdf.rect(5, 5, 200, 287) 
     
-    # 2. LOGOS
-    if os.path.exists("logo.png"): pdf.image("logo.png", 10, 10, 28)
-    if os.path.exists("bss_logo.png"): pdf.image("bss_logo.png", 170, 10, 25)
+    # 2. HEADER
+    if os.path.exists("logo.png"): pdf.image("logo.png", 8, 8, 22)
+    if os.path.exists("bss_logo.png"): pdf.image("bss_logo.png", 175, 8, 20)
     
-    # 3. HEADER
-    pdf.set_font("Arial", 'B', 16); pdf.set_text_color(0, 46, 99)
-    pdf.set_xy(10, 15); pdf.cell(0, 10, "OXFORD PARAMEDICAL INSTITUTE", ln=True, align='C')
-    pdf.set_font("Arial", 'B', 9); pdf.set_text_color(204, 0, 0)
-    # UPDATED ADDRESS IN PDF
-    pdf.cell(0, 5, "Chamata Balipathar Road, Assam", ln=True, align='C')
-    pdf.set_font("Arial", 'B', 10); pdf.set_text_color(0, 100, 0)
-    pdf.cell(0, 7, "AFFILIATED TO BHARAT SEVAK SAMAJ (BSS)", ln=True, align='C')
+    pdf.set_font("Arial", 'B', 15); pdf.set_text_color(0, 46, 99)
+    pdf.set_xy(10, 10); pdf.cell(0, 8, "OXFORD PARAMEDICAL INSTITUTE", ln=True, align='C')
+    pdf.set_font("Arial", 'B', 8); pdf.set_text_color(204, 0, 0)
+    pdf.cell(0, 4, "Chamata Balipathar Road, Assam", ln=True, align='C')
+    pdf.set_font("Arial", 'B', 9); pdf.set_text_color(0, 100, 0)
+    pdf.cell(0, 5, "AFFILIATED TO BHARAT SEVAK SAMAJ (BSS)", ln=True, align='C')
     
-    pdf.ln(10)
-    pdf.set_font("Arial", 'B', 13); pdf.set_fill_color(240, 240, 240); pdf.set_text_color(0,0,0)
-    pdf.cell(0, 10, "ADMIT CARD: DMLT FINAL EXAMINATION 2026", border=1, ln=True, align='C', fill=True)
+    pdf.ln(2)
+    pdf.set_font("Arial", 'B', 11); pdf.set_fill_color(230, 230, 230); pdf.set_text_color(0,0,0)
+    pdf.cell(0, 8, "ADMIT CARD: DMLT FINAL EXAMINATION 2026", border=1, ln=True, align='C', fill=True)
     
-    # 4. PHOTO BOX
-    if uploaded_photo:
-        pdf.image(temp_photo, 160, 65, 35, 45)
-    else:
-        pdf.rect(160, 65, 35, 45)
-        pdf.set_xy(160, 111); pdf.set_font("Arial", '', 7); pdf.cell(35, 5, "Affix Photo", align='C')
-    
-    # 5. CANDIDATE INFO
-    pdf.set_xy(15, 70); pdf.set_font("Arial", 'B', 10)
-    pdf.cell(0, 8, f"ROLL NUMBER     : {roll_no.upper()}", ln=True)
-    pdf.cell(0, 8, f"NAME            : {student_name.upper()}", ln=True)
-    pdf.cell(0, 8, f"FATHER'S NAME  : {father_name.upper()}", ln=True)
-    pdf.cell(0, 8, f"COURSE          : DMLT (Medical Laboratory Tech)", ln=True)
-    pdf.cell(0, 8, f"EXAM CENTER     : {exam_center.upper()}", ln=True)
-    pdf.set_text_color(204, 0, 0) 
-    pdf.cell(0, 8, f"REPORTING TIME  : 10:00 AM (Entry Closes at 10:15 AM)", ln=True)
+    # 3. CANDIDATE INFO & PHOTO (SIDE BY SIDE)
+    pdf.ln(4)
+    start_y = pdf.get_y()
+    pdf.set_font("Arial", 'B', 9)
+    info_x = 12
+    pdf.set_xy(info_x, start_y)
+    pdf.cell(0, 6, f"ROLL NUMBER     : {roll_no.upper()}", ln=True)
+    pdf.set_x(info_x); pdf.cell(0, 6, f"NAME            : {student_name.upper()}", ln=True)
+    pdf.set_x(info_x); pdf.cell(0, 6, f"FATHER'S NAME  : {father_name.upper()}", ln=True)
+    pdf.set_x(info_x); pdf.cell(0, 6, f"COURSE          : DMLT (Medical Laboratory Technology)", ln=True)
+    pdf.set_x(info_x); pdf.cell(0, 6, f"EXAM CENTER     : {exam_center.upper()}", ln=True)
+    pdf.set_x(info_x); pdf.set_text_color(204, 0, 0)
+    pdf.cell(0, 6, f"REPORTING TIME  : 10:00 AM (Entry Closes 10:15 AM)", ln=True)
     pdf.set_text_color(0, 0, 0)
 
-    # 6. UPDATED DMLT EXAM SCHEDULE
-    pdf.ln(10)
-    pdf.set_font("Arial", 'B', 9); pdf.set_fill_color(220, 220, 220)
-    pdf.cell(30, 10, "DATE", border=1, fill=True, align='C')
-    pdf.cell(110, 10, "SUBJECTS", border=1, fill=True, align='C')
-    pdf.cell(50, 10, "TIMING", border=1, fill=True, align='C', ln=True)
+    # Photo Box
+    if uploaded_photo:
+        pdf.image(temp_photo, 160, start_y, 32, 38)
+    else:
+        pdf.rect(160, start_y, 32, 38)
+        pdf.set_xy(160, start_y + 39); pdf.set_font("Arial", '', 7); pdf.cell(32, 4, "Affix Photo", align='C')
     
-    pdf.set_font("Arial", '', 8.5)
+    # 4. EXAM SCHEDULE TABLE (Compact height)
+    pdf.set_xy(10, start_y + 42)
+    pdf.set_font("Arial", 'B', 9); pdf.set_fill_color(220, 220, 220)
+    pdf.cell(28, 8, "DATE", border=1, fill=True, align='C')
+    pdf.cell(112, 8, "SUBJECTS", border=1, fill=True, align='C')
+    pdf.cell(50, 8, "TIMING", border=1, fill=True, align='C', ln=True)
+    
+    pdf.set_font("Arial", '', 8)
     new_time = "10:30 AM - 01:30 PM"
-    # INTEGRATED YOUR SPECIFIC ROUTINE
     schedule = [
         ["14/05/2026", "English and Computer", new_time],
         ["16/05/2026", "Anatomy and Physiology", new_time],
@@ -99,36 +98,38 @@ if submit and student_name:
     ]
     
     for item in schedule:
-        pdf.cell(30, 9, item[0], border=1, align='C')
-        pdf.cell(110, 9, f"  {item[1]}", border=1)
-        pdf.cell(50, 9, item[2], border=1, ln=True, align='C')
+        pdf.cell(28, 7, item[0], border=1, align='C')
+        pdf.cell(112, 7, f" {item[1]}", border=1)
+        pdf.cell(50, 7, item[2], border=1, ln=True, align='C')
     
-    # 7. INSTRUCTIONS SECTION
-    pdf.ln(5)
-    pdf.set_font("Arial", 'B', 10); pdf.set_text_color(0, 46, 99)
-    pdf.cell(0, 7, "GENERAL INSTRUCTIONS TO CANDIDATES:", ln=True)
-    pdf.set_font("Arial", '', 8.5); pdf.set_text_color(0, 0, 0)
+    # 5. INSTRUCTIONS (Compact)
+    pdf.ln(3)
+    pdf.set_font("Arial", 'B', 9); pdf.set_text_color(0, 46, 99)
+    pdf.cell(0, 5, "GENERAL INSTRUCTIONS TO CANDIDATES:", ln=True)
+    pdf.set_font("Arial", '', 8); pdf.set_text_color(0, 0, 0)
     instructions = [
-        "1. Candidates must carry this Admit Card and an Identity Proof to the examination hall.",
-        "2. Entry to the examination hall starts at 10:00 AM. No entry allowed after 10:15 AM.",
-        "3. Use of mobile phones, calculators, or any electronic gadgets is strictly prohibited.",
+        "1. Candidates must carry this Admit Card and ID Proof to the examination hall.",
+        "2. Entry allowed 10:00 AM to 10:15 AM only. No entry after 10:15 AM.",
+        "3. Mobile phones and electronic gadgets are strictly prohibited.",
         "4. Candidates must bring their own stationery and a clean Lab Coat.",
-        "5. Any candidate found using unfair means will be disqualified immediately.",
-        "6. Maintain silence and follow the instructions provided by the invigilator."
+        "5. Disqualification for unfair means. Maintain silence inside the hall."
     ]
     for line in instructions:
-        pdf.cell(0, 5, line, ln=True)
+        pdf.cell(0, 4, line, ln=True)
 
-    # 8. FOOTER & SIGNATURES
-    pdf.ln(10)
-    if os.path.exists("signature.png"): pdf.image("signature.png", 150, 245, 35)
-    pdf.set_xy(140, 265); pdf.set_font("Arial", 'B', 9); pdf.cell(50, 10, "__________________________", ln=True, align='C')
-    pdf.set_xy(140, 270); pdf.cell(50, 10, "Controller of Examinations", align='C')
+    # 6. SIGNATURES (Forced placement near bottom of page 1)
+    pdf.set_y(250) 
+    if os.path.exists("signature.png"):
+        pdf.image("signature.png", 150, 240, 30)
     
-    pdf.set_xy(15, 270); pdf.cell(50, 10, "Candidate Signature", align='C')
+    pdf.set_font("Arial", 'B', 9)
+    pdf.set_xy(15, 260); pdf.cell(50, 5, "______________________", ln=False, align='C')
+    pdf.set_xy(140, 260); pdf.cell(50, 5, "______________________", ln=True, align='C')
+    pdf.set_xy(15, 265); pdf.cell(50, 5, "Candidate Signature", align='C')
+    pdf.set_xy(140, 265); pdf.cell(50, 5, "Controller of Examinations", align='C')
 
     pdf_output = pdf.output(dest='S').encode('latin-1', 'ignore')
-    st.success(f"✅ Admit Card for {student_name} generated successfully!")
+    st.success(f"✅ One-page Admit Card for {student_name} ready!")
     st.download_button("Download Admit Card", pdf_output, f"DMLT_Admit_{student_name}.pdf")
     
     if os.path.exists(temp_photo): os.remove(temp_photo)
