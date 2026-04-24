@@ -40,23 +40,23 @@ if submit and student_name:
     # 1. BORDERS
     pdf.set_line_width(0.5); pdf.rect(5, 5, 200, 287) 
     
-    # 2. HEADER
-    if os.path.exists("logo.png"): pdf.image("logo.png", 8, 8, 22)
-    if os.path.exists("bss_logo.png"): pdf.image("bss_logo.png", 175, 8, 20)
+    # 2. HEADER (Tightened for more space)
+    if os.path.exists("logo.png"): pdf.image("logo.png", 8, 7, 20)
+    if os.path.exists("bss_logo.png"): pdf.image("bss_logo.png", 178, 7, 18)
     
-    pdf.set_font("Arial", 'B', 15); pdf.set_text_color(0, 46, 99)
-    pdf.set_xy(10, 10); pdf.cell(0, 8, "OXFORD PARAMEDICAL INSTITUTE", ln=True, align='C')
+    pdf.set_font("Arial", 'B', 14); pdf.set_text_color(0, 46, 99)
+    pdf.set_xy(10, 8); pdf.cell(0, 7, "OXFORD PARAMEDICAL INSTITUTE", ln=True, align='C')
     pdf.set_font("Arial", 'B', 8); pdf.set_text_color(204, 0, 0)
     pdf.cell(0, 4, "Chamata Balipathar Road, Assam", ln=True, align='C')
     pdf.set_font("Arial", 'B', 9); pdf.set_text_color(0, 100, 0)
-    pdf.cell(0, 5, "AFFILIATED TO BHARAT SEVAK SAMAJ (BSS)", ln=True, align='C')
+    pdf.cell(0, 4, "AFFILIATED TO BHARAT SEVAK SAMAJ (BSS)", ln=True, align='C')
     
-    pdf.ln(2)
+    pdf.ln(1)
     pdf.set_font("Arial", 'B', 11); pdf.set_fill_color(230, 230, 230); pdf.set_text_color(0,0,0)
     pdf.cell(0, 8, "ADMIT CARD: DMLT FINAL EXAMINATION 2026", border=1, ln=True, align='C', fill=True)
     
-    # 3. CANDIDATE INFO & PHOTO (SIDE BY SIDE)
-    pdf.ln(4)
+    # 3. CANDIDATE INFO & PHOTO
+    pdf.ln(3)
     start_y = pdf.get_y()
     pdf.set_font("Arial", 'B', 9)
     info_x = 12
@@ -77,14 +77,15 @@ if submit and student_name:
         pdf.rect(160, start_y, 32, 38)
         pdf.set_xy(160, start_y + 39); pdf.set_font("Arial", '', 7); pdf.cell(32, 4, "Affix Photo", align='C')
     
-    # 4. EXAM SCHEDULE TABLE (Compact height)
-    pdf.set_xy(10, start_y + 42)
-    pdf.set_font("Arial", 'B', 9); pdf.set_fill_color(220, 220, 220)
-    pdf.cell(28, 8, "DATE", border=1, fill=True, align='C')
-    pdf.cell(112, 8, "SUBJECTS", border=1, fill=True, align='C')
-    pdf.cell(50, 8, "TIMING", border=1, fill=True, align='C', ln=True)
+    # 4. EXAM SCHEDULE TABLE (Enlarged by approx 1 inch / 25mm total)
+    # Row height increased to 10mm (Original was 7mm)
+    pdf.set_xy(10, start_y + 40)
+    pdf.set_font("Arial", 'B', 10); pdf.set_fill_color(220, 220, 220)
+    pdf.cell(30, 10, "DATE", border=1, fill=True, align='C')
+    pdf.cell(110, 10, "SUBJECTS", border=1, fill=True, align='C')
+    pdf.cell(50, 10, "TIMING", border=1, fill=True, align='C', ln=True)
     
-    pdf.set_font("Arial", '', 8)
+    pdf.set_font("Arial", '', 9)
     new_time = "10:30 AM - 01:30 PM"
     schedule = [
         ["14/05/2026", "English and Computer", new_time],
@@ -98,11 +99,11 @@ if submit and student_name:
     ]
     
     for item in schedule:
-        pdf.cell(28, 7, item[0], border=1, align='C')
-        pdf.cell(112, 7, f" {item[1]}", border=1)
-        pdf.cell(50, 7, item[2], border=1, ln=True, align='C')
+        pdf.cell(30, 10, item[0], border=1, align='C')
+        pdf.cell(110, 10, f" {item[1]}", border=1)
+        pdf.cell(50, 10, item[2], border=1, ln=True, align='C')
     
-    # 5. INSTRUCTIONS (Compact)
+    # 5. INSTRUCTIONS (Tighter padding)
     pdf.ln(3)
     pdf.set_font("Arial", 'B', 9); pdf.set_text_color(0, 46, 99)
     pdf.cell(0, 5, "GENERAL INSTRUCTIONS TO CANDIDATES:", ln=True)
@@ -117,19 +118,19 @@ if submit and student_name:
     for line in instructions:
         pdf.cell(0, 4, line, ln=True)
 
-    # 6. SIGNATURES (Forced placement near bottom of page 1)
-    pdf.set_y(250) 
+    # 6. SIGNATURES
+    pdf.set_y(260) 
     if os.path.exists("signature.png"):
-        pdf.image("signature.png", 150, 240, 30)
+        pdf.image("signature.png", 155, 252, 30)
     
     pdf.set_font("Arial", 'B', 9)
-    pdf.set_xy(15, 260); pdf.cell(50, 5, "______________________", ln=False, align='C')
-    pdf.set_xy(140, 260); pdf.cell(50, 5, "______________________", ln=True, align='C')
-    pdf.set_xy(15, 265); pdf.cell(50, 5, "Candidate Signature", align='C')
-    pdf.set_xy(140, 265); pdf.cell(50, 5, "Controller of Examinations", align='C')
+    pdf.set_xy(15, 270); pdf.cell(50, 5, "______________________", ln=False, align='C')
+    pdf.set_xy(140, 270); pdf.cell(50, 5, "______________________", ln=True, align='C')
+    pdf.set_xy(15, 275); pdf.cell(50, 5, "Candidate Signature", align='C')
+    pdf.set_xy(140, 275); pdf.cell(50, 5, "Controller of Examinations", align='C')
 
     pdf_output = pdf.output(dest='S').encode('latin-1', 'ignore')
-    st.success(f"✅ One-page Admit Card for {student_name} ready!")
+    st.success(f"✅ Admit Card with enlarged routine ready!")
     st.download_button("Download Admit Card", pdf_output, f"DMLT_Admit_{student_name}.pdf")
     
     if os.path.exists(temp_photo): os.remove(temp_photo)
