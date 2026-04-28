@@ -8,7 +8,7 @@ from PIL import Image
 st.set_page_config(page_title="OPI DMLT Portal", layout="centered")
 
 st.markdown("<h1 style='text-align: center; color: #002e63;'>OXFORD PARAMEDICAL INSTITUTE</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-weight: bold; margin-top:-15px;'>Chamata Balipathar Road, Assam</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-weight: bold; margin-top:-15px;'>Guwahati, Assam</p>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: green; font-weight: bold;'>Affiliated to BSS (Bharat Sevak Samaj)</p>", unsafe_allow_html=True)
 
 st.divider()
@@ -23,7 +23,7 @@ with st.form("dmlt_admit_form"):
         father_name = st.text_input("FATHER'S NAME")
     with col2:
         st.write("**Course:** DMLT")
-        exam_center = st.text_input("EXAM CENTER", value="Dhupdhara Campus")
+        exam_center = st.text_input("EXAM CENTER", value="Guwahati Campus")
         uploaded_photo = st.file_uploader("Upload Photo", type=['jpg', 'jpeg', 'png'])
     
     submit = st.form_submit_button("GENERATE ADMIT CARD")
@@ -47,7 +47,7 @@ if submit and student_name:
     pdf.set_font("Arial", 'B', 14); pdf.set_text_color(0, 46, 99)
     pdf.set_xy(10, 8); pdf.cell(0, 7, "OXFORD PARAMEDICAL INSTITUTE", ln=True, align='C')
     pdf.set_font("Arial", 'B', 8); pdf.set_text_color(204, 0, 0)
-    pdf.cell(0, 4, "Chamata Balipathar Road, Assam", ln=True, align='C')
+    pdf.cell(0, 4, "Guwahati, Assam", ln=True, align='C')
     pdf.set_font("Arial", 'B', 9); pdf.set_text_color(0, 100, 0)
     pdf.cell(0, 4, "AFFILIATED TO BHARAT SEVAK SAMAJ (BSS)", ln=True, align='C')
     
@@ -86,14 +86,12 @@ if submit and student_name:
     pdf.set_font("Arial", '', 9)
     new_time = "10:30 AM - 01:30 PM"
     schedule = [
-        ["14/05/2026", "English and Computer", new_time],
-        ["16/05/2026", "Anatomy and Physiology", new_time],
-        ["19/05/2026", "Biochemistry", new_time],
-        ["21/05/2026", "Microbiology", new_time],
-        ["23/05/2026", "Pathology", new_time],
-        ["26/05/2026", "Biochemistry (Project viva and submission)", "10:30 AM Onwards"],
-        ["28/05/2026", "Microbiology (Practical viva and submission)", "10:30 AM Onwards"],
-        ["29/05/2026", "Pathology (Practical viva and submission)", "10:30 AM Onwards"]
+        ["29/04/2026", "Practical 1", new_time],
+        ["30/04/2026", "Practical 2", new_time],
+        ["06/05/2026", "Anatomy and physiology(ot and x ray)& Anatomy & biochemistry(DMLT)", new_time],
+        ["08/05/2026", "Pathology(DMLT), Care of patient undergoing surgery(OT)Dark Room Techniques(X Ray)", new_time],
+        ["11/05/2026", "Microbiology(DMLT), infection control in OT(OT), Postioning in radiography(X Ray) ", new_time],
+        ["12/05/2026", "Surgical procedure (OT), Radiographic Physics (XRay) ", "10:30 AM Onwards"],
     ]
     
     for item in schedule:
