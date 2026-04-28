@@ -81,38 +81,29 @@ if submit and student_name:
         pdf.rect(160, start_y, 32, 38)
         pdf.set_xy(160, start_y + 39); pdf.set_font("Arial", '', 7); pdf.cell(32, 4, "Affix Photo", align='C')
     
-    # 4. EXAM SCHEDULE TABLE (With Wrapping Logic)
+    # 4. EXAM SCHEDULE TABLE (Clean Single-Line Format)
     pdf.set_xy(10, start_y + 45)
     pdf.set_font("Arial", 'B', 10); pdf.set_fill_color(220, 220, 220)
-    pdf.cell(30, 10, "DATE", border=1, fill=True, align='C')
-    pdf.cell(115, 10, "SUBJECTS", border=1, fill=True, align='C')
-    pdf.cell(45, 10, "TIMING", border=1, fill=True, align='C', ln=True)
+    # Adjusted widths to give the Subject column maximum room
+    pdf.cell(25, 10, "DATE", border=1, fill=True, align='C')
+    pdf.cell(130, 10, "SUBJECTS", border=1, fill=True, align='C')
+    pdf.cell(35, 10, "TIMING", border=1, fill=True, align='C', ln=True)
     
-    pdf.set_font("Arial", '', 8)
+    pdf.set_font("Arial", '', 7.5) # Slightly smaller font to keep subjects on one line
     new_time = "10:30 AM - 1:30 PM"
     schedule = [
         ["29/04/2026", "Practical 1", new_time],
         ["30/04/2026", "Practical 2", new_time],
-        ["06/05/2026", "Anatomy & Physiology (OT & X-Ray) / Anatomy & Biochemistry (DMLT)", new_time],
-        ["08/05/2026", "Pathology (DMLT) / Care of Patient (OT) / Dark Room Tech (X-Ray)", new_time],
-        ["11/05/2026", "Microbiology (DMLT) / Infection Control (OT) / Positioning (X-Ray)", new_time],
-        ["12/05/2026", "Surgical Procedure (OT) / Radiographic Physics (X-Ray)", "10:30 AM Onwards"],
+        ["06/05/2026", "Anatomy & Physiology (OT/X-Ray) & Anatomy & Biochemistry (DMLT)", new_time],
+        ["08/05/2026", "Pathology (DMLT), Care of patient (OT), Dark Room Tech (X-Ray)", new_time],
+        ["11/05/2026", "Microbiology (DMLT), Infection control (OT), Positioning (X-Ray)", new_time],
+        ["12/05/2026", "Surgical procedure (OT), Radiographic Physics (X-Ray)", "10:30 AM Onwards"],
     ]
     
     for item in schedule:
-        # Multi-cell allows the text to wrap to a second line if it's too long
-        curr_x = pdf.get_x()
-        curr_y = pdf.get_y()
-        
-        pdf.cell(30, 10, item[0], border=1, align='C')
-        
-        # We use multi_cell for the subjects
-        pdf.set_xy(curr_x + 30, curr_y)
-        pdf.multi_cell(115, 5, item[1], border=1, align='L') 
-        
-        # Reset position for the Timing column
-        pdf.set_xy(curr_x + 145, curr_y)
-        pdf.cell(45, 10, item[2], border=1, ln=True, align='C')
+        pdf.cell(25, 10, item[0], border=1, align='C')
+        pdf.cell(130, 10, f" {item[1]}", border=1)
+        pdf.cell(35, 10, item[2], border=1, ln=True, align='C')
     
     # 5. INSTRUCTIONS
     pdf.ln(3)
@@ -130,7 +121,7 @@ if submit and student_name:
         pdf.cell(0, 4, line, ln=True)
 
     # 6. SIGNATURE SECTION
-    current_y = pdf.get_y() + 8 
+    current_y = pdf.get_y() + 10 
     pdf.set_y(current_y)
     if os.path.exists("signature.png"):
         pdf.image("signature.png", 155, current_y - 8, 30)
@@ -142,7 +133,7 @@ if submit and student_name:
     pdf.set_xy(140, current_y + 15); pdf.cell(50, 5, "Seal & Signature", align='C')
 
     pdf_output = pdf.output(dest='S').encode('latin-1', 'ignore')
-    st.success(f"✅ Admit Card for {student_name} ready!")
+    st.success(f"✅ Admit Card for {student_name} generated successfully!")
     st.download_button("Download Admit Card", pdf_output, f"Admit_{student_name}.pdf")
     
     if os.path.exists(temp_photo): os.remove(temp_photo)
