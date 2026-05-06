@@ -15,7 +15,7 @@ selected_course = st.sidebar.selectbox(
 )
 
 st.markdown("<h1 style='text-align: center; color: #002e63;'>OXFORD PARAMEDICAL INSTITUTE</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-weight: bold; margin-top:-15px;'>Dhupdhara, Goalpara, Assam</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-weight: bold; margin-top:-15px;'>Guwahati, Assam</p>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: green; font-weight: bold;'>Affiliated to BSS (Bharat Sevak Samaj)</p>", unsafe_allow_html=True)
 
 st.divider()
@@ -30,7 +30,7 @@ with st.form("admit_form"):
         father_name = st.text_input("FATHER'S NAME")
     with col2:
         st.write(f"**Course:** {selected_course}")
-        exam_center = st.text_input("EXAM CENTER", value="Dhupdhara Campus")
+        exam_center = st.text_input("EXAM CENTER", value="Guwahati Campus")
         uploaded_photo = st.file_uploader("Upload Photo", type=['jpg', 'jpeg', 'png'])
     
     submit = st.form_submit_button("GENERATE ADMIT CARD")
@@ -52,7 +52,7 @@ if submit and student_name:
     pdf.set_font("Arial", 'B', 18); pdf.set_text_color(0, 46, 99)
     pdf.set_xy(10, 12); pdf.cell(0, 10, "OXFORD PARAMEDICAL INSTITUTE", ln=True, align='C')
     pdf.set_font("Arial", 'B', 11); pdf.set_text_color(204, 0, 0)
-    pdf.cell(0, 6, "Dhupdhara, Goalpara, Assam", ln=True, align='C')
+    pdf.cell(0, 6, "Guwahati, Assam", ln=True, align='C')
     pdf.set_font("Arial", 'B', 12); pdf.set_text_color(0, 100, 0)
     pdf.cell(0, 7, "AFFILIATED TO BHARAT SEVAK SAMAJ (BSS)", ln=True, align='C')
     
@@ -81,34 +81,35 @@ if submit and student_name:
         pdf.rect(160, start_y, 32, 38)
         pdf.set_xy(160, start_y + 39); pdf.set_font("Arial", '', 7); pdf.cell(32, 4, "Affix Photo", align='C')
     
-    # 4. UPDATED EXAM SCHEDULE TABLE
+    # 4. EXAM SCHEDULE TABLE (Clean Single-Line Format)
     pdf.set_xy(10, start_y + 45)
     pdf.set_font("Arial", 'B', 10); pdf.set_fill_color(220, 220, 220)
-    pdf.cell(35, 10, "DATE / DAY", border=1, fill=True, align='C')
-    pdf.cell(115, 10, "SUBJECTS", border=1, fill=True, align='C')
-    pdf.cell(40, 10, "TIMING", border=1, fill=True, align='C', ln=True)
+    # Adjusted widths to give the Subject column maximum room
+    pdf.cell(25, 10, "DATE", border=1, fill=True, align='C')
+    pdf.cell(130, 10, "SUBJECTS", border=1, fill=True, align='C')
+    pdf.cell(35, 10, "TIMING", border=1, fill=True, align='C', ln=True)
     
-    pdf.set_font("Arial", '', 9)
+    pdf.set_font("Arial", '', 7.5) # Slightly smaller font to keep subjects on one line
     new_time = "10:30 AM - 1:30 PM"
-    # Routine integrated as per your request
     schedule = [
-        ["11/05/2026 Mon", "English and Computer Application", new_time],
-        ["13/05/2026 Wed", "Hematology", new_time],
-        ["16/05/2026 Sat", "Microbiology", new_time],
-        ["18/05/2026 Mon", "Anatomy and Biochemistry", new_time],
-        ["21/05/2026 Thu", "Practical Exam and Viva", "10:30 AM Onwards"],
+        ["29/04/2026", "Practical 1", new_time],
+        ["30/04/2026", "Practical 2", new_time],
+        ["06/05/2026", "Anatomy & Physiology (OT/X-Ray) & Anatomy & Biochemistry (DMLT)", new_time],
+        ["08/05/2026", "Pathology (DMLT), Care of patient (OT), Dark Room Tech (X-Ray)", new_time],
+        ["11/05/2026", "Microbiology (DMLT), Infection control (OT), Positioning (X-Ray)", new_time],
+        ["12/05/2026", "Surgical procedure (OT), Radiographic Physics (X-Ray)", "10:30 AM Onwards"],
     ]
     
     for item in schedule:
-        pdf.cell(35, 11, item[0], border=1, align='C')
-        pdf.cell(115, 11, f" {item[1]}", border=1)
-        pdf.cell(40, 11, item[2], border=1, ln=True, align='C')
+        pdf.cell(25, 10, item[0], border=1, align='C')
+        pdf.cell(130, 10, f" {item[1]}", border=1)
+        pdf.cell(35, 10, item[2], border=1, ln=True, align='C')
     
     # 5. INSTRUCTIONS
-    pdf.ln(5)
+    pdf.ln(3)
     pdf.set_font("Arial", 'B', 9); pdf.set_text_color(0, 46, 99)
     pdf.cell(0, 5, "GENERAL INSTRUCTIONS TO CANDIDATES:", ln=True)
-    pdf.set_font("Arial", '', 8.5); pdf.set_text_color(0, 0, 0)
+    pdf.set_font("Arial", '', 8); pdf.set_text_color(0, 0, 0)
     instructions = [
         "1. Candidates must carry this Admit Card and ID Proof to the examination hall.",
         "2. Entry allowed 10:00 AM to 10:15 AM only. No entry after 10:15 AM.",
@@ -117,13 +118,13 @@ if submit and student_name:
         "5. Disqualification for unfair means. Maintain silence inside the hall."
     ]
     for line in instructions:
-        pdf.cell(0, 5, line, ln=True)
+        pdf.cell(0, 4, line, ln=True)
 
     # 6. SIGNATURE SECTION
-    current_y = pdf.get_y() + 15 
+    current_y = pdf.get_y() + 10 
     pdf.set_y(current_y)
     if os.path.exists("signature.png"):
-        pdf.image("signature.png", 155, current_y - 10, 30)
+        pdf.image("signature.png", 155, current_y - 8, 30)
     
     pdf.set_font("Arial", 'B', 9)
     pdf.set_xy(15, current_y + 10); pdf.cell(50, 5, "______________________", ln=False, align='C')
@@ -132,7 +133,7 @@ if submit and student_name:
     pdf.set_xy(140, current_y + 15); pdf.cell(50, 5, "Seal & Signature", align='C')
 
     pdf_output = pdf.output(dest='S').encode('latin-1', 'ignore')
-    st.success(f"✅ Admit Card for {student_name} generated!")
+    st.success(f"✅ Admit Card for {student_name} generated successfully!")
     st.download_button("Download Admit Card", pdf_output, f"Admit_{student_name}.pdf")
     
     if os.path.exists(temp_photo): os.remove(temp_photo)
