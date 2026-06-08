@@ -13,7 +13,6 @@ st.markdown("<p style='text-align: center; font-weight: bold;'>Dhupdhara, Goalpa
 st.divider()
 
 # --- EXAM ROUTINE DATA ---
-# Hardcoded schedule to match the layout requirements exactly
 EXAM_ROUTINE = [
     {"date": "15-06-2026", "day": "Monday", "subject": "Microbiology"},
     {"date": "18-06-2026", "day": "Thursday", "subject": "Clinical Pathology"},
@@ -51,18 +50,23 @@ if submit and name and roll_no:
     # Simple Layout Border
     pdf.rect(5, 5, 200, 287)
     
-    # Logo placement (Top Left)
-    if os.path.exists("osdc_logo.png"):
-        pdf.image("osdc_logo.png", 12, 12, 35)
+    # --- DUAL LOGO RENDERING (Old Format Layout) ---
+    # Left Side: Oxford Skill Development Centre Logo
+    if os.path.exists("logo.png"):
+        pdf.image("logo.png", 12, 12, 32)
     
-    # Institutional Header Configuration
-    pdf.set_font("Arial", 'B', 16)
-    pdf.set_xy(50, 15)
-    pdf.cell(0, 10, "OXFORD SKILL DEVELOPMENT INSTITUTE", ln=True, align='L')
+    # Right Side: BSS Certification Logo
+    if os.path.exists("bss_logo.png"):
+        pdf.image("bss_logo.png", 165, 12, 32)
     
-    pdf.set_font("Arial", 'B', 11)
-    pdf.set_xy(50, 22)
-    pdf.cell(0, 10, "Dhupdhara, Goalpara, Assam | ESTD. 2009", ln=True, align='L')
+    # Institutional Header Configuration (Centered between logos)
+    pdf.set_font("Arial", 'B', 15)
+    pdf.set_xy(45, 15)
+    pdf.cell(120, 10, "OXFORD SKILL DEVELOPMENT INSTITUTE", ln=True, align='C')
+    
+    pdf.set_font("Arial", 'B', 10)
+    pdf.set_xy(45, 23)
+    pdf.cell(120, 8, "Dhupdhara, Goalpara, Assam | ESTD. 2009", ln=True, align='C')
     
     pdf.ln(25)
     pdf.set_font("Arial", 'B', 14)
