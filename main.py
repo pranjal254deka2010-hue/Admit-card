@@ -2,137 +2,120 @@ import streamlit as st
 from fpdf import FPDF
 from datetime import datetime
 import os
-from PIL import Image
 
-# --- PAGE CONFIG ---
-st.set_page_config(page_title="OPI Admit Card Portal", layout="centered")
+# --- APP SETUP ---
+st.set_page_config(page_title="OSDI Admit Card Portal")
 
-# --- SIDEBAR COURSE SELECTION ---
-st.sidebar.title("Navigation")
-selected_course = st.sidebar.selectbox(
-    "Select Student Course", 
-    ["DMLT", "OT Technician", "X Ray Technician"]
-)
-
-st.markdown("<h1 style='text-align: center; color: #002e63;'>OXFORD PARAMEDICAL INSTITUTE</h1>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-weight: bold; margin-top:-15px;'>Guwahati, Assam</p>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: green; font-weight: bold;'>Affiliated to BSS (Bharat Sevak Samaj)</p>", unsafe_allow_html=True)
+# Header on the Webpage
+st.markdown("<h2 style='text-align: center; color: #002e63;'>OXFORD SKILL DEVELOPMENT INSTITUTE</h2>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-weight: bold;'>Dhupdhara, Goalpara, Assam | SECOND YEAR ADMIT CARD</p>", unsafe_allow_html=True)
 
 st.divider()
 
-# --- INPUT FORM ---
-st.subheader(f"📝 {selected_course} First Year Final Examination 2026")
-with st.form("admit_form"):
+# --- EXAM ROUTINE DATA ---
+# Hardcoded schedule to match the layout requirements exactly
+EXAM_ROUTINE = [
+    {"date": "15-06-2026", "day": "Monday", "subject": "Microbiology"},
+    {"date": "18-06-2026", "day": "Thursday", "subject": "Clinical Pathology"},
+    {"date": "22-06-2026", "day": "Monday", "subject": "Anatomy & Biochemistry"},
+    {"date": "25-06-2026", "day": "Thursday", "subject": "Practical & Viva"},
+]
+
+# --- FORM ---
+with st.form("admit_card_form"):
     col1, col2 = st.columns(2)
     with col1:
-        roll_no = st.text_input("ROLL NUMBER")
-        student_name = st.text_input("CANDIDATE NAME")
-        father_name = st.text_input("FATHER'S NAME")
+        name = st.text_input("Student Name")
+        roll_no = st.text_input("Roll Number / Enrollment No.")
     with col2:
-        st.write(f"**Course:** {selected_course}")
-        exam_center = st.text_input("EXAM CENTER", value="Guwahati Campus")
-        uploaded_photo = st.file_uploader("Upload Photo", type=['jpg', 'jpeg', 'png'])
+        exam_session = st.text_input("Exam Session / Year", value="2026")
+        date_of_issue = st.date_input("Date of Issue", value=datetime.today())
+
+    # Course Selection
+    course = st.selectbox("Course", [
+        "DMLT", 
+        "ICU TECHNICIAN", 
+        "FIRST AID AND PATIENT CARE"
+    ])
     
-    submit = st.form_submit_button("GENERATE ADMIT CARD")
+    st.info("🗓️ The official second-year exam schedule will be embedded automatically into the PDF.")
+    submit = st.form_submit_button("Generate Official Admit Card")
 
-if submit and student_name:
-    temp_photo = "temp_photo.png"
-    if uploaded_photo:
-        img = Image.open(uploaded_photo)
-        img.save(temp_photo)
-
+if submit and name and roll_no:
+    formatted_issue_date = date_of_issue.strftime("%d-%m-%Y")
+    
+    # --- PDF GENERATION ---
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_line_width(0.5); pdf.rect(5, 5, 200, 287) 
     
-    # 2. ENLARGED HEADER
-    if os.path.exists("logo.png"): pdf.image("logo.png", 10, 10, 32)
-    if os.path.exists("bss_logo.png"): pdf.image("bss_logo.png", 168, 10, 30)
+    # Simple Layout Border
+    pdf.rect(5, 5, 200, 287)
     
-    pdf.set_font("Arial", 'B', 18); pdf.set_text_color(0, 46, 99)
-    pdf.set_xy(10, 12); pdf.cell(0, 10, "OXFORD PARAMEDICAL INSTITUTE", ln=True, align='C')
-    pdf.set_font("Arial", 'B', 11); pdf.set_text_color(204, 0, 0)
-    pdf.cell(0, 6, "Guwahati, Assam", ln=True, align='C')
-    pdf.set_font("Arial", 'B', 12); pdf.set_text_color(0, 100, 0)
-    pdf.cell(0, 7, "AFFILIATED TO BHARAT SEVAK SAMAJ (BSS)", ln=True, align='C')
+    # Logo placement (Top Left)
+    if os.path.exists("osdc_logo.png"):
+        pdf.image("osdc_logo.png", 12, 12, 35)
     
-    pdf.ln(4)
-    pdf.set_font("Arial", 'B', 12); pdf.set_fill_color(230, 230, 230); pdf.set_text_color(0,0,0)
-    pdf.cell(0, 10, f"ADMIT CARD: {selected_course} FIRST YEAR FINAL EXAM 2026", border=1, ln=True, align='C', fill=True)
+    # Institutional Header Configuration
+    pdf.set_font("Arial", 'B', 16)
+    pdf.set_xy(50, 15)
+    pdf.cell(0, 10, "OXFORD SKILL DEVELOPMENT INSTITUTE", ln=True, align='L')
     
-    # 3. CANDIDATE INFO & PHOTO
-    pdf.ln(5)
-    start_y = pdf.get_y()
+    pdf.set_font("Arial", 'B', 11)
+    pdf.set_xy(50, 22)
+    pdf.cell(0, 10, "Dhupdhara, Goalpara, Assam | ESTD. 2009", ln=True, align='L')
+    
+    pdf.ln(25)
+    pdf.set_font("Arial", 'B', 14)
+    pdf.cell(0, 10, "OFFICIAL EXAMINATION ADMIT CARD", ln=True, align='C')
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(0, 8, "SECOND YEAR", ln=True, align='C')
+    
+    # Content Alignment Grid
+    pdf.ln(10)
+    pdf.set_font("Arial", '', 11)
+    
+    pdf.cell(100, 10, f"Roll No: {roll_no.upper()}", ln=False, align='L')
+    pdf.cell(0, 10, f"Issue Date: {formatted_issue_date}", ln=True, align='R')
+    pdf.set_xy(10, pdf.get_y() + 2)
+    
+    pdf.cell(0, 10, f"Student Name: {name.upper()}", border='B', ln=True)
+    pdf.cell(0, 10, f"Course: {course} (Second Year)", border='B', ln=True)
+    pdf.cell(0, 10, f"Exam Session: {exam_session}", border='B', ln=True)
+    
+    # --- SCHEDULE TABLE GENERATION ---
+    pdf.ln(10)
+    pdf.set_font("Arial", 'B', 12)
+    pdf.cell(0, 10, "EXAMINATION ROUTINE & SCHEDULE", ln=True, align='L')
+    
+    # Table Header Configuration
     pdf.set_font("Arial", 'B', 10)
-    info_x = 12
-    pdf.set_xy(info_x, start_y)
-    pdf.cell(0, 7, f"ROLL NUMBER     : {roll_no.upper()}", ln=True)
-    pdf.set_x(info_x); pdf.cell(0, 7, f"NAME            : {student_name.upper()}", ln=True)
-    pdf.set_x(info_x); pdf.cell(0, 7, f"FATHER'S NAME  : {father_name.upper()}", ln=True)
-    pdf.set_x(info_x); pdf.cell(0, 7, f"COURSE          : {selected_course}", ln=True)
-    pdf.set_x(info_x); pdf.cell(0, 7, f"EXAM CENTER     : {exam_center.upper()}", ln=True)
-    pdf.set_x(info_x); pdf.set_text_color(204, 0, 0)
-    pdf.cell(0, 7, f"REPORTING TIME  : 10:00 AM (Entry Closes 10:15 AM)", ln=True)
-    pdf.set_text_color(0, 0, 0)
-
-    if uploaded_photo:
-        pdf.image(temp_photo, 160, start_y, 32, 38)
-    else:
-        pdf.rect(160, start_y, 32, 38)
-        pdf.set_xy(160, start_y + 39); pdf.set_font("Arial", '', 7); pdf.cell(32, 4, "Affix Photo", align='C')
+    pdf.cell(40, 10, "Date", border=1, align='C')
+    pdf.cell(40, 10, "Day", border=1, align='C')
+    pdf.cell(110, 10, "Subject / Paper", border=1, align='C')
+    pdf.ln()
     
-    # 4. FIRST YEAR EXAM SCHEDULE
-    pdf.set_xy(10, start_y + 45)
-    pdf.set_font("Arial", 'B', 10); pdf.set_fill_color(220, 220, 220)
-    pdf.cell(28, 10, "DATE", border=1, fill=True, align='C')
-    pdf.cell(122, 10, "SUBJECTS", border=1, fill=True, align='C')
-    pdf.cell(40, 10, "TIMING", border=1, fill=True, align='C', ln=True)
+    # Table Rows Population
+    pdf.set_font("Arial", '', 10)
+    for row in EXAM_ROUTINE:
+        pdf.cell(40, 10, row["date"], border=1, align='C')
+        pdf.cell(40, 10, row["day"], border=1, align='C')
+        pdf.cell(110, 10, f"  {row['subject']}", border=1, align='L')
+        pdf.ln()
     
-    pdf.set_font("Arial", '', 7.5) # Font adjusted to fit long DMLT/OT strings
-    new_time = "10:30 AM - 1:30 PM"
-    
-    schedule = [
-        ["14/05/2026", "Practical 1", "10:30 AM Onwards"],
-        ["18/05/2026", "Communicative English and Computer Fundamental", new_time],
-        ["20/05/2026", "Anatomy & Physiology (DOTT/X-Ray) | Anatomy, Physiology & Biochemistry (DMLT)", new_time],
-        ["22/05/2026", "Microbiology", new_time],
-        ["25/05/2026", "Pathology (DMLT) | Project Presentation and Viva (DOTT/X-Ray)", "10:30 AM Onwards"]
-    ]
-    
-    for item in schedule:
-        pdf.cell(28, 11, item[0], border=1, align='C')
-        pdf.cell(122, 11, f" {item[1]}", border=1)
-        pdf.cell(40, 11, item[2], border=1, ln=True, align='C')
-    
-    # 5. INSTRUCTIONS
-    pdf.ln(5)
-    pdf.set_font("Arial", 'B', 9); pdf.set_text_color(0, 46, 99)
-    pdf.cell(0, 5, "GENERAL INSTRUCTIONS TO CANDIDATES:", ln=True)
-    pdf.set_font("Arial", '', 8.5); pdf.set_text_color(0, 0, 0)
-    instructions = [
-        "1. Candidates must carry this Admit Card and ID Proof to the examination hall.",
-        "2. Entry allowed 10:00 AM to 10:15 AM only. No entry allowed after 10:15 AM.",
-        "3. Mobile phones, electronic gadgets, and smartwatches are strictly prohibited.",
-        "4. Candidates must bring their own stationery and a clean Lab Coat.",
-        "5. Disqualification for unfair means. Maintain silence inside the hall."
-    ]
-    for line in instructions:
-        pdf.cell(0, 5, line, ln=True)
-
-    # 6. SIGNATURE SECTION
-    current_y = pdf.get_y() + 15 
-    pdf.set_y(current_y)
+    # Signature Element (Bottom Right)
     if os.path.exists("signature.png"):
-        pdf.image("signature.png", 155, current_y - 10, 30)
-    
-    pdf.set_font("Arial", 'B', 9)
-    pdf.set_xy(15, current_y + 10); pdf.cell(50, 5, "______________________", ln=False, align='C')
-    pdf.set_xy(140, current_y + 10); pdf.cell(50, 5, "______________________", ln=True, align='C')
-    pdf.set_xy(15, current_y + 15); pdf.cell(50, 5, "Candidate Signature", align='C')
-    pdf.set_xy(140, current_y + 15); pdf.cell(50, 5, "Seal & Signature", align='C')
+        pdf.image("signature.png", 150, 210, 40)
+        
+    pdf.set_xy(140, 235)
+    pdf.set_font("Arial", 'B', 10)
+    pdf.cell(50, 10, "__________________________", ln=True, align='C')
+    pdf.set_xy(140, 240)
+    pdf.cell(50, 10, "Controller of Examinations", align='C')
 
-    pdf_output = pdf.output(dest='S').encode('latin-1', 'ignore')
-    st.success(f"✅ Admit Card for {student_name} (First Year) generated!")
-    st.download_button("Download Admit Card", pdf_output, f"FirstYear_Admit_{student_name}.pdf")
-    
-    if os.path.exists(temp_photo): os.remove(temp_photo)
+    # Compilation Logic
+    try:
+        pdf_output = pdf.output(dest='S').encode('latin-1')
+        st.success(f"Admit card for {name} generated successfully with full routine!")
+        st.download_button("📥 Download PDF Admit Card", pdf_output, f"OSDI_AdmitCard_SecondYear_{name}.pdf")
+    except Exception as e:
+        st.error(f"Error compiling layout schedule table into PDF formatting: {e}")
