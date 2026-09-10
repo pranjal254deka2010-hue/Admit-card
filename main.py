@@ -14,12 +14,12 @@ st.divider()
 
 # --- EXAM ROUTINE DATA ---
 EXAM_ROUTINE = [
-    {"date": "18/09/2026", "day": "Friday", "subject": "Clinical Microbiology / Pharmacology / X-Ray Tech.", "time": "10:30 AM - 01:30 PM"},
-    {"date": "21/09/2026", "day": "Monday", "subject": "Clinical Biochemistry", "time": "10:30 AM - 01:30 PM"},
-    {"date": "23/09/2026", "day": "Wednesday", "subject": "Anatomy and Physiology", "time": "10:30 AM - 01:30 PM"},
-    {"date": "25/09/2026", "day": "Friday", "subject": "Histopathology & Cytology / Anaesthesia", "time": "10:30 AM - 01:30 PM"},
-    {"date": "28/09/2026", "day": "Monday", "subject": "Haematology and Blood Banking", "time": "10:30 AM - 01:30 PM"},
-    {"date": "29/09/2026", "day": "Tuesday", "subject": "Computer and English", "time": "10:30 AM - 01:30 PM"},
+    {"date": "18/09/2026", "day": "Friday", "subject": "Clinical Microbiology / Pharmacology / X-Ray Tech.", "time": "10:00 AM - 01:00 PM"},
+    {"date": "21/09/2026", "day": "Monday", "subject": "Clinical Biochemistry", "time": "10:00 AM - 01:00 PM"},
+    {"date": "23/09/2026", "day": "Wednesday", "subject": "Anatomy and Physiology", "time": "10:00 AM - 01:00 PM"},
+    {"date": "25/09/2026", "day": "Friday", "subject": "Histopathology & Cytology / Anaesthesia", "time": "10:00 AM - 01:00 PM"},
+    {"date": "28/09/2026", "day": "Monday", "subject": "Haematology and Blood Banking", "time": "10:00 AM - 01:00 PM"},
+    {"date": "29/09/2026", "day": "Tuesday", "subject": "Computer and English", "time": "10:00 AM - 01:00 PM"},
 ]
 
 # --- FORM ---
@@ -42,7 +42,7 @@ with st.form("admit_card_form"):
     
     exam_center = st.text_input("Exam Center", value="BAIHATA CHARIALI CAMPUS")
     
-    st.info("🗓️ The official first-year routine (September 2026) has been updated.")
+    st.info("🗓️ Exam timing updated to 10:00 AM - 01:00 PM with entry closing at 09:45 AM.")
     submit = st.form_submit_button("Generate Official Admit Card")
 
 if submit and name and roll_no:
@@ -121,7 +121,7 @@ if submit and name and roll_no:
     pdf.set_x(12)
     pdf.cell(38, 8, "REPORTING TIME", ln=False)
     pdf.set_font("Arial", 'I', 10)
-    pdf.cell(0, 8, ": 10:00 AM (Entry Closes 10:15 AM)", ln=True)
+    pdf.cell(0, 8, ": 09:30 AM (Entry Closes 09:45 AM)", ln=True)
     
     # --- PASSPORT PHOTO BOX PLACEMENT ---
     if photo_path and os.path.exists(photo_path):
@@ -156,7 +156,7 @@ if submit and name and roll_no:
     pdf.set_font("Arial", '', 8)
     instructions = [
         "1. Candidates must carry this Admit Card and valid ID Proof to the examination hall.",
-        "2. Entry allowed between 10:00 AM to 10:15 AM only. No entry after 10:15 AM.",
+        "2. Entry allowed between 09:30 AM to 09:45 AM only. No entry after 09:45 AM.",
         "3. Mobile phones and electronic communication gadgets are strictly prohibited.",
         "4. Candidates must bring their own required stationery and a clean Lab Coat.",
         "5. Adoption of unfair means leads to immediate disqualification. Maintain absolute silence."
