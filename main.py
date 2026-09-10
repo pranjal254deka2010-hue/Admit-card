@@ -7,7 +7,7 @@ import os
 st.set_page_config(page_title="SIST Admit Card Portal", layout="centered")
 
 # Header on the Webpage
-st.markdown("<h2 style='text-align: center; color: #002e63;'>SANKERDEV INSTITUTE OF SCIENCE AND TECHNOLOGY</h2>", unsafe_allow_html=True)
+st.markdown("<h2 style='text-align: center; color: #002e63;'>SANKARDEV INSTITUTE OF SCIENCE AND TECHNOLOGY</h2>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; font-weight: bold;'>Baihata Chariali, Assam | FIRST YEAR ADMIT CARD GENERATOR</p>", unsafe_allow_html=True)
 
 st.divider()
@@ -42,7 +42,7 @@ with st.form("admit_card_form"):
     
     exam_center = st.text_input("Exam Center", value="BAIHATA CHARIALI CAMPUS")
     
-    st.info("🗓️ Exam timing updated to 10:00 AM - 01:00 PM with entry closing at 09:45 AM.")
+    st.info("🗓️ Exam timing: 10:00 AM - 01:00 PM (Entry Closes at 09:45 AM).")
     submit = st.form_submit_button("Generate Official Admit Card")
 
 if submit and name and roll_no:
@@ -71,9 +71,9 @@ if submit and name and roll_no:
         pdf.image("bss_logo.png", 172, 10, 28)
     
     # Center Header Texts
-    pdf.set_font("Arial", 'B', 14)
+    pdf.set_font("Arial", 'B', 13)
     pdf.set_xy(40, 11)
-    pdf.cell(130, 7, "SANKERDEV INSTITUTE OF SCIENCE & TECHNOLOGY", ln=True, align='C')
+    pdf.cell(130, 7, "SANKARDEV INSTITUTE OF SCIENCE AND TECHNOLOGY", ln=True, align='C')
     
     pdf.set_font("Arial", '', 10)
     pdf.cell(0, 5, "Baihata Chariali, Assam", ln=True, align='C')
