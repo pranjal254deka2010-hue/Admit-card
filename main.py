@@ -4,22 +4,20 @@ from datetime import datetime
 import os
 
 # --- APP SETUP ---
-st.set_page_config(page_title="SIST Admit Card Portal", layout="centered")
+st.set_page_config(page_title="SIST Final Year Admit Card Portal", layout="centered")
 
 # Header on the Webpage
 st.markdown("<h2 style='text-align: center; color: #002e63;'>SANKARDEV INSTITUTE OF SCIENCE AND TECHNOLOGY</h2>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; font-weight: bold;'>Baihata Chariali, Assam | FIRST YEAR ADMIT CARD GENERATOR</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center; font-weight: bold;'>Baihata Chariali, Assam | FINAL YEAR ADMIT CARD GENERATOR</p>", unsafe_allow_html=True)
 
 st.divider()
 
-# --- EXAM ROUTINE DATA ---
+# --- EXAM ROUTINE DATA (FINAL YEAR) ---
 EXAM_ROUTINE = [
-    {"date": "18/09/2026", "day": "Friday", "subject": "Clinical Microbiology / Pharmacology / X-Ray Tech.", "time": "10:00 AM - 01:00 PM"},
-    {"date": "21/09/2026", "day": "Monday", "subject": "Clinical Biochemistry", "time": "10:00 AM - 01:00 PM"},
-    {"date": "23/09/2026", "day": "Wednesday", "subject": "Anatomy and Physiology", "time": "10:00 AM - 01:00 PM"},
-    {"date": "25/09/2026", "day": "Friday", "subject": "Histopathology & Cytology / Anaesthesia", "time": "10:00 AM - 01:00 PM"},
-    {"date": "28/09/2026", "day": "Monday", "subject": "Haematology and Blood Banking", "time": "10:00 AM - 01:00 PM"},
-    {"date": "29/09/2026", "day": "Tuesday", "subject": "Computer and English", "time": "10:00 AM - 01:00 PM"},
+    {"date": "18/09/2026", "day": "Friday", "subject": "Histopathology & Cytology / CT Scan & Radiographic Tech. II", "time": "10:00 AM - 01:00 PM"},
+    {"date": "21/09/2026", "day": "Monday", "subject": "Clinical Microbiology", "time": "10:00 AM - 01:00 PM"},
+    {"date": "23/09/2026", "day": "Wednesday", "subject": "Clinical Biochemistry", "time": "10:00 AM - 01:00 PM"},
+    {"date": "25/09/2026", "day": "Friday", "subject": "Haematology and Blood Banking", "time": "10:00 AM - 01:00 PM"},
 ]
 
 # --- FORM ---
@@ -42,8 +40,8 @@ with st.form("admit_card_form"):
     
     exam_center = st.text_input("Exam Center", value="BAIHATA CHARIALI CAMPUS")
     
-    st.info("🗓️ Exam timing: 10:00 AM - 01:00 PM (Entry Closes at 09:45 AM).")
-    submit = st.form_submit_button("Generate Official Admit Card")
+    st.info("🗓️ Final Year exam routine (September 2026) loaded: 10:00 AM - 01:00 PM (Entry Closes at 09:45 AM).")
+    submit = st.form_submit_button("Generate Official Final Year Admit Card")
 
 if submit and name and roll_no:
     
@@ -85,7 +83,7 @@ if submit and name and roll_no:
     
     pdf.ln(6)
     pdf.set_font("Arial", 'B', 11)
-    pdf.cell(0, 7, f"ADMIT CARD: {course} FIRST YEAR EXAMINATION 2026", ln=True, align='C')
+    pdf.cell(0, 7, f"ADMIT CARD: {course} FINAL YEAR EXAMINATION 2026", ln=True, align='C')
     pdf.cell(0, 6, f"ROLL NUMBER : {roll_no.upper()}", ln=True, align='C')
     
     pdf.ln(4)
@@ -180,11 +178,11 @@ if submit and name and roll_no:
         if isinstance(pdf_output, str):
             pdf_output = pdf_output.encode('latin-1')
             
-        st.success(f"Admit card for {name.upper()} compiled successfully!")
+        st.success(f"Final Year admit card for {name.upper()} compiled successfully!")
         st.download_button(
-            label="📥 Download Official Admit Card", 
+            label="📥 Download Official Final Year Admit Card", 
             data=pdf_output, 
-            file_name=f"SIST_AdmitCard_1stYear_2026_{roll_no}.pdf",
+            file_name=f"SIST_AdmitCard_FinalYear_2026_{roll_no}.pdf",
             mime="application/pdf"
         )
     except Exception as e:
